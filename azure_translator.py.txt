@@ -1,0 +1,29 @@
+import requests
+import sys
+import json
+
+# Azure Translator API credentials
+subscription_key = 'YOUR_SUBSCRIPTION_KEY'
+endpoint = 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0'
+
+# Azure region
+location = 'YOUR_LOCATION'
+
+def translate(text, target_language):
+    headers = {
+        'Ocp-Apim-Subscription-Key': subscription_key,
+        'Ocp-Apim-Subscription-Region': location,
+        'Content-type': 'application/json'
+    }
+    body = [{'Text': text}]
+    constructed_url = endpoint + '&to=' + target_language
+    response = requests.post(constructed_url, headers=headers, json=body)
+    response_data = response.json()
+    translated_text = response_data[0]['translations'][0]['text']
+    return translated_text
+
+if __name__ == "__main__":
+    text = sys.argv[1]
+    target_language = sys.argv[2]
+    translated_text = translate(text, target_language)
+    print(translated_text)
